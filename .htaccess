@@ -1,0 +1,23 @@
+AddDefaultCharset utf8
+
+# Disable Indexing of folders
+<IfModule mod_autoindex.c>
+  Options -Indexes
+</IfModule>
+
+<IfModule mod_rewrite.c>
+  Options +FollowSymLinks
+  RewriteEngine On
+  RewriteBase /
+
+  RewriteCond %{REQUEST_URI} ^/index$ [OR]
+  RewriteCond %{REQUEST_URI} ^/index[.]+(\w+)$
+  RewriteRule . / [R=301,L]
+
+  RewriteCond %{REQUEST_URI} ^/admin/index$ [OR]
+  RewriteCond %{REQUEST_URI} ^/admin/index[.]+(\w+)$
+  RewriteRule . /admin [R=301,L]
+
+  RewriteRule ^admin/?(.*)?$ /backend/web/$1 [L]
+  RewriteRule ^([^/].*)?$ /frontend/web/$1 [L]
+</IfModule>
