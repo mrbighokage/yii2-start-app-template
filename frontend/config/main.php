@@ -10,20 +10,46 @@ return [
     'id' => 'app-frontend',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
-    'controllerNamespace' => 'frontend\controllers',
+    'controllerNamespace' => 'frontend\modules\site\controllers',
+    'defaultRoute' => 'default',
     'homeUrl' => '/',
     'components' => [
-        'request' => [
-            'baseUrl' => '/',
-        ],
         'urlManager' => [
             'class' => 'yii\web\UrlManager',
             'baseUrl' => '/',
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
-                '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
+                // global rule
+                // ModuleID/ControllerID/ActionID
+
+                '<action:about|contact|index>' => 'site/default/<action>',
+                '<action:signup|login>' => 'users/default/<action>',
+
+                'site/captcha' => 'site/default/captcha',
+                //'site/<action:error>' => 'site/default/<action>',
             ]
+        ],
+        'errorHandler' => [
+            'errorAction' => 'site/default/error'
+        ],
+        'view' => [
+            'theme' => [
+                'basePath' => '@app/themes/basic',
+                'baseUrl' => '@web/themes/basic',
+                'pathMap' => [
+                    '@app/views' => [
+                        '@app/themes/basic/modules/site/views',
+                        '@app/themes/basic',
+                    ],
+                    '@app/modules' => [
+                        '@app/themes/basic/modules',
+                    ]
+                ],
+            ],
+        ],
+        'request' => [
+            'baseUrl' => '/',
         ],
         'user' => [
             'identityClass' => 'common\models\User',
@@ -38,8 +64,13 @@ return [
                 ],
             ],
         ],
-        'errorHandler' => [
-            'errorAction' => 'site/error',
+    ],
+    'modules' => [
+        'site' => [
+            'class' => 'frontend\modules\site\Module'
+        ],
+        'users' => [
+            'class' => 'frontend\modules\users\Module'
         ],
     ],
     'params' => $params,

@@ -1,6 +1,6 @@
 <?php
 
-namespace frontend\models;
+namespace frontend\modules\site\models\forms;
 
 use Yii;
 use yii\base\Model;
@@ -27,7 +27,7 @@ class ContactForm extends Model
             // email has to be a valid email address
             ['email', 'email'],
             // verifyCode needs to be entered correctly
-            ['verifyCode', 'captcha'],
+            ['verifyCode', 'captcha', 'captchaAction'=>'/site/default/captcha'],
         ];
     }
 

@@ -5,7 +5,7 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace frontend\assets;
+namespace frontend\themes\basic;
 
 use yii\web\AssetBundle;
 
@@ -15,8 +15,9 @@ use yii\web\AssetBundle;
  */
 class AppAsset extends AssetBundle
 {
-    public $basePath = '@webroot';
-    public $baseUrl = '@web';
+    public $basePath = '@app/themes/basic';
+    public $baseUrl = '@web/themes/basic';
+
     public $css = [
         'css/site.css',
     ];
