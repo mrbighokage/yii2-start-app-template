@@ -7,7 +7,7 @@ use yii\helpers\Html;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
-use frontend\themes\basic\AppAsset;
+use frontend\themes\basic\assets\AppAsset;
 use frontend\modules\site\widgets\Alert;
 
 AppAsset::register($this);

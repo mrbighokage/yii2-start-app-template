@@ -14,33 +14,32 @@ DIRECTORY STRUCTURE
 -------------------
 
 ```
-common
+common/
     config/              contains shared configurations
     mail/                contains view files for e-mails
-    models/              contains model classes used in both backend and frontend
-console
+    modules/             contains modules classes used in both backend and frontend
+console/
     config/              contains console configurations
     controllers/         contains console controllers (commands)
     migrations/          contains database migrations
     models/              contains console-specific model classes
     runtime/             contains files generated during runtime
-backend
-    assets/              contains application assets such as JavaScript and CSS
+backend/
     config/              contains backend configurations
-    controllers/         contains Web controller classes
-    models/              contains backend-specific model classes
+    modules/             contains backend-specific modules classes
     runtime/             contains files generated during runtime
-    views/               contains view files for the Web application
+    themes/              contains views template
+        assets/          contains application assets such as JavaScript and CSS
     web/                 contains the entry script and Web resources
-frontend
-    assets/              contains application assets such as JavaScript and CSS
-    config/              contains frontend configurations
-    controllers/         contains Web controller classes
-    models/              contains frontend-specific model classes
+        themes/          contains themes JavaScript/CSS/Images
+frontend/
+    config/              contains backend configurations
+    modules/             contains backend-specific modules classes
     runtime/             contains files generated during runtime
-    views/               contains view files for the Web application
+    themes/              contains views template
+        assets/          contains application assets such as JavaScript and CSS
     web/                 contains the entry script and Web resources
-    widgets/             contains frontend widgets
+        themes/          contains themes JavaScript/CSS/Images
 vendor/                  contains dependent 3rd-party packages
 environments/            contains environment-based overrides
 tests                    contains various tests for the advanced application
