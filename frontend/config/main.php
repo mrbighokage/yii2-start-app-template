@@ -11,7 +11,7 @@ return [
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'controllerNamespace' => 'frontend\modules\site\controllers',
-    'defaultRoute' => 'site',
+    'defaultRoute' => 'default',
     'homeUrl' => '/',
     'components' => [
         'urlManager' => [
@@ -24,7 +24,7 @@ return [
                 // ModuleID/ControllerID/ActionID
 
                 '<action:about|contact|index>' => 'site/default/<action>',
-                '<action:signup|login>' => 'users/default/<action>',
+                '<action:signup|login|logout>' => 'users/default/<action>',
 
                 '<controller:site>/<action:captcha>' => 'site/default/<action>',
             ]
@@ -51,7 +51,7 @@ return [
             'baseUrl' => '/',
         ],
         'user' => [
-            'identityClass' => 'common\models\User',
+            'identityClass' => 'common\modules\users\models\User',
             'enableAutoLogin' => false,
         ],
         'log' => [

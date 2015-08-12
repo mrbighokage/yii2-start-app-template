@@ -1,8 +1,10 @@
 <?php
-namespace common\models;
+namespace backend\modules\users\models\forms;
 
 use Yii;
 use yii\base\Model;
+
+use common\modules\users\models\User;
 
 /**
  * Login form
@@ -56,7 +58,7 @@ class LoginForm extends Model
     public function login()
     {
         if ($this->validate()) {
-            return Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600 * 24 * 30 : 0);
+            return Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600 * 24 * 30 : 0); // 30 days
         } else {
             return false;
         }

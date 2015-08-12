@@ -9,9 +9,9 @@ $params = array_merge(
 return [
     'id' => 'app-backend',
     'basePath' => dirname(__DIR__),
-    'controllerNamespace' => 'backend\controllers',
+    'controllerNamespace' => 'backend\modules\admin\controllers',
+    'defaultRoute' => 'default',
     'bootstrap' => ['log'],
-    'modules' => [],
     'homeUrl' => '/admin',
     'components' => [
         'request' => [
@@ -23,12 +23,35 @@ return [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
-                '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
+                // global rule
+                // ModuleID/ControllerID/ActionID
+
+                '<action:index>' => 'admin/default/<action>',
+                '<action:login|logout>' => 'users/default/<action>',
             ]
         ],
+        'errorHandler' => [
+            'errorAction' => 'admin/default/error'
+        ],
+        'view' => [
+            'theme' => [
+                'basePath' => '@app/themes/sb_admin',
+                'baseUrl' => '@web/themes/sb_admin',
+                'pathMap' => [
+                    '@app/views' => [
+                        '@app/themes/sb_admin/modules/admin/views',
+                        '@app/themes/sb_admin',
+                    ],
+                    '@app/modules' => [
+                        '@app/themes/sb_admin/modules',
+                    ]
+                ],
+            ],
+        ],
         'user' => [
-            'identityClass' => 'common\models\User',
-            'enableAutoLogin' => true,
+            'identityClass' => 'common\modules\users\models\User',
+            'enableAutoLogin' => false,
+            'loginUrl' => 'admin/login'
         ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
@@ -39,8 +62,13 @@ return [
                 ],
             ],
         ],
-        'errorHandler' => [
-            'errorAction' => 'site/error',
+    ],
+    'modules' => [
+        'admin' => [
+            'class' => 'backend\modules\admin\Module'
+        ],
+        'users' => [
+            'class' => 'backend\modules\users\Module'
         ],
     ],
     'params' => $params,
