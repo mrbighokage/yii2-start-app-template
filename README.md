@@ -29,17 +29,13 @@ backend/
     modules/             contains backend-specific modules classes
     runtime/             contains files generated during runtime
     themes/              contains views template
-        assets/          contains application assets such as JavaScript and CSS
     web/                 contains the entry script and Web resources
-        themes/          contains themes JavaScript/CSS/Images
 frontend/
     config/              contains backend configurations
     modules/             contains backend-specific modules classes
     runtime/             contains files generated during runtime
     themes/              contains views template
-        assets/          contains application assets such as JavaScript and CSS
     web/                 contains the entry script and Web resources
-        themes/          contains themes JavaScript/CSS/Images
 vendor/                  contains dependent 3rd-party packages
 environments/            contains environment-based overrides
 tests                    contains various tests for the advanced application
