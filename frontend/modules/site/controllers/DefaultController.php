@@ -20,7 +20,7 @@ class DefaultController extends Controller
     public function behaviors()
     {
         return [
-            'access' => [
+            /*'access' => [
                 'class' => AccessControl::className(),
                 'only' => ['logout', 'signup'],
                 'rules' => [
@@ -35,7 +35,7 @@ class DefaultController extends Controller
                         'roles' => ['@'],
                     ],
                 ],
-            ],
+            ],*/
         ];
     }
 

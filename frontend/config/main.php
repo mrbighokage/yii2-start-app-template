@@ -11,7 +11,7 @@ return [
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'controllerNamespace' => 'frontend\modules\site\controllers',
-    'defaultRoute' => 'default',
+    'defaultRoute' => 'site',
     'homeUrl' => '/',
     'components' => [
         'urlManager' => [
@@ -26,8 +26,7 @@ return [
                 '<action:about|contact|index>' => 'site/default/<action>',
                 '<action:signup|login>' => 'users/default/<action>',
 
-                'site/captcha' => 'site/default/captcha',
-                //'site/<action:error>' => 'site/default/<action>',
+                '<controller:site>/<action:captcha>' => 'site/default/<action>',
             ]
         ],
         'errorHandler' => [

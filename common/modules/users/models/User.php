@@ -1,5 +1,6 @@
 <?php
-namespace common\models;
+
+namespace common\modules\users\models;
 
 use Yii;
 use yii\base\NotSupportedException;
