@@ -10,6 +10,13 @@ use common\modules\users\models\User;
  * run console command
  * # yii rbac/init
  * to prepare base RBAC
+ *
+ * check access for login user
+ * \Yii::$app->user->can(User::getAdminPermissionKey())
+ *
+ * check access for custom user
+ * $userPermissions = Yii::$app->authManager->getPermissionsByUser($user->getId());
+ * if($userPermissions && isset($userPermissions['namePermission'])) {}
  * */
 class RbacController extends Controller
 {
