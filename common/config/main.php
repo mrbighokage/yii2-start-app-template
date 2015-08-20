@@ -21,9 +21,9 @@ return [
                     'class' => 'yii\i18n\DbMessageSource',
                     'forceTranslation' => true,
                 ],
-                'user' => [
+                'users' => [
                     'class' => 'yii\i18n\DbMessageSource',
-                    //'forceTranslation' => true,
+                    'forceTranslation' => true,
                 ]
             ],
         ],

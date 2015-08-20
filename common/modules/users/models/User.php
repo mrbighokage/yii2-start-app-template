@@ -32,10 +32,10 @@ class User extends ActiveRecord implements IdentityInterface
 
     public static function getStatusList() {
         return [
-            self::STATUS_ACTIVE => Yii::t('user', 'Active'),
-            self::STATUS_BANNED => Yii::t('user', 'Banned'),
-            self::STATUS_DELETED => Yii::t('user', 'Deleted'),
-            self::STATUS_DISABLED => Yii::t('user', 'Disabled'),
+            self::STATUS_ACTIVE => Yii::t('users', 'Active'),
+            self::STATUS_BANNED => Yii::t('users', 'Banned'),
+            self::STATUS_DELETED => Yii::t('users', 'Deleted'),
+            self::STATUS_DISABLED => Yii::t('users', 'Disabled'),
         ];
     }
 

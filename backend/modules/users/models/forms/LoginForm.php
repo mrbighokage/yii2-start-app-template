@@ -63,7 +63,6 @@ class LoginForm extends Model
         } else {
             return false;
         }
-
     }
 
     /**

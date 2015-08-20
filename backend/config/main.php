@@ -45,7 +45,11 @@ return [
                     ],
                     '@app/modules' => [
                         '@app/themes/sb_admin/modules',
-                    ]
+                    ],
+                    '@app/modules/users/views' => [
+                        '@app/themes/sb_admin',
+                    ],
+
                 ],
             ],
         ],
