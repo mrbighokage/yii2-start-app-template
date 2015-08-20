@@ -19,11 +19,11 @@ return [
             'translations' => [
                 'app' => [
                     'class' => 'yii\i18n\DbMessageSource',
-                    'forceTranslation' => true,
+                    'forceTranslation' => false,
                 ],
                 'users' => [
                     'class' => 'yii\i18n\DbMessageSource',
-                    'forceTranslation' => true,
+                    'forceTranslation' => false,
                 ]
             ],
         ],

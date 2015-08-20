@@ -54,6 +54,7 @@ class DefaultController extends Controller
 
     public function actionIndex()
     {
+        print_r($_SESSION);
         return $this->render('index');
     }
 

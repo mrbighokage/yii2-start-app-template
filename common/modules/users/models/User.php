@@ -226,7 +226,7 @@ class User extends ActiveRecord implements IdentityInterface
 
                 // Assign role admin to root user
                 $auth = Yii::$app->authManager;
-                $auth->assign($auth->getRole('user'), $user->getId());
+                $auth->assign($auth->getRole(Yii::$app->params['admin.Username']), $user->getId());
             }
         }
     }
