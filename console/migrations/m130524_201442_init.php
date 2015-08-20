@@ -17,17 +17,15 @@ class m130524_201442_init extends Migration
         $this->createTable(User::tableName(), [
             'id' => $this->primaryKey(),
             'username' => $this->string()->notNull()->unique(),
-            'role' => $this->string(16)->notNull()->defaultValue('user'),
             'auth_key' => $this->string(32)->notNull(),
             'password_hash' => $this->string()->notNull(),
             'password_reset_token' => $this->string()->unique(),
             'email' => $this->string()->notNull()->unique(),
 
-            'status' => $this->smallInteger()->notNull()->defaultValue(User::STATUS_ACTIVE),
+            'status' => $this->smallInteger()->notNull()->defaultValue(User::STATUS_DISABLED),
             'created_at' => $this->integer()->notNull(),
             'updated_at' => $this->integer()->notNull(),
         ], $tableOptions);
-
 
     }
 

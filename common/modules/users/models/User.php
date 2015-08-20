@@ -24,15 +24,18 @@ use yii\web\IdentityInterface;
  */
 class User extends ActiveRecord implements IdentityInterface
 {
-    const STATUS_DELETED = 0;
+
+    const STATUS_DISABLED = 0;
     const STATUS_ACTIVE = 1;
     const STATUS_BANNED = 2;
+    const STATUS_DELETED = 3;
 
     public static function getStatusList() {
         return [
             self::STATUS_ACTIVE => Yii::t('user', 'Active'),
             self::STATUS_BANNED => Yii::t('user', 'Banned'),
             self::STATUS_DELETED => Yii::t('user', 'Deleted'),
+            self::STATUS_DISABLED => Yii::t('user', 'Disabled'),
         ];
     }
 
@@ -60,8 +63,8 @@ class User extends ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
-            ['status', 'default', 'value' => self::STATUS_ACTIVE],
-            ['status', 'in', 'range' => self::getStatusList()],
+            ['status', 'default', 'value' => self::STATUS_DISABLED],
+            ['status', 'in', 'range' => array_keys(self::getStatusList())],
         ];
     }
 
@@ -194,5 +197,37 @@ class User extends ActiveRecord implements IdentityInterface
     public function removePasswordResetToken()
     {
         $this->password_reset_token = null;
+    }
+
+    public static function getAdminPermissionKey() {
+        return 'AdminPermissionKey';
+    }
+
+    public static function getRoleAdminKey() {
+        return 'admin';
+    }
+
+    public static function getRoleUserKey() {
+        return 'user';
+    }
+
+    public static  function createSuperAdmin() {
+
+        if(!self::findByUsername(Yii::$app->params['admin.Username'])) {
+            $user = new User();
+            $user->status = self::STATUS_ACTIVE;
+            $user->password_reset_token = '';
+            $user->username = Yii::$app->params['admin.Username'];
+            $user->email = Yii::$app->params['admin.Email'];
+            $user->setPassword(Yii::$app->params['admin.Password']);
+            $user->generateAuthKey();
+
+            if ($user->save()) {
+
+                // Assign role admin to root user
+                $auth = Yii::$app->authManager;
+                $auth->assign($auth->getRole('user'), $user->getId());
+            }
+        }
     }
 }
