@@ -25,7 +25,16 @@ use yii\web\IdentityInterface;
 class User extends ActiveRecord implements IdentityInterface
 {
     const STATUS_DELETED = 0;
-    const STATUS_ACTIVE = 10;
+    const STATUS_ACTIVE = 1;
+    const STATUS_BANNED = 2;
+
+    public static function getStatusList() {
+        return [
+            self::STATUS_ACTIVE => Yii::t('user', 'Active'),
+            self::STATUS_BANNED => Yii::t('user', 'Banned'),
+            self::STATUS_DELETED => Yii::t('user', 'Deleted'),
+        ];
+    }
 
     /**
      * @inheritdoc
@@ -52,7 +61,7 @@ class User extends ActiveRecord implements IdentityInterface
     {
         return [
             ['status', 'default', 'value' => self::STATUS_ACTIVE],
-            ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED]],
+            ['status', 'in', 'range' => self::getStatusList()],
         ];
     }
 

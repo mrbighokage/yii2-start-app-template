@@ -13,6 +13,7 @@ return [
     'defaultRoute' => 'default',
     'bootstrap' => ['log'],
     'homeUrl' => '/admin',
+    'language' => 'en-US',
     'components' => [
         'request' => [
             'baseUrl' => '/admin',

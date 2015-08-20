@@ -67,13 +67,14 @@ at [getcomposer.org](http://getcomposer.org/doc/00-intro.md#installation-nix).
 for example:
 
 ~~~
-php -r "readfile('https://getcomposer.org/installer');" | php
+# php -r "readfile('https://getcomposer.org/installer');" | php
 ~~~
 
 You can then load framework/extension using the following command:
 
 ~~~
-php -f composer.phar update
+# php composer.phar global require "fxp/composer-asset-plugin:1.0.0"
+# php -f composer.phar update
 ~~~
 
 
