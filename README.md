@@ -93,7 +93,7 @@ the installed application. You only need to do these once for all.
 # yii migrate --migrationPath=@yii/rbac/migrations
 ~~~
 
-4. Create user Admin and default RBAC (user, admin)
+4. Create user "admin" and default RBAC for user, admin. Default password use from common\config\params.php
 
 ~~~
 # yii rbac/init
