@@ -75,6 +75,9 @@ return [
         'users' => [
             'class' => 'backend\modules\users\Module'
         ],
+        'gridview' =>  [
+            'class' => '\kartik\grid\Module'
+        ]
     ],
     'params' => $params,
 ];

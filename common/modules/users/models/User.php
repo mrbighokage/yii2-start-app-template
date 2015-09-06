@@ -30,6 +30,8 @@ class User extends ActiveRecord implements IdentityInterface
     const STATUS_BANNED = 2;
     const STATUS_DELETED = 3;
 
+    public $password;
+
     public static function getStatusList() {
         return [
             self::STATUS_ACTIVE => Yii::t('users', 'Active'),
@@ -37,6 +39,11 @@ class User extends ActiveRecord implements IdentityInterface
             self::STATUS_DELETED => Yii::t('users', 'Deleted'),
             self::STATUS_DISABLED => Yii::t('users', 'Disabled'),
         ];
+    }
+
+    public static function getStatus($status_id) {
+        $list = self::getStatusList();
+        return isset($list[$status_id]) ? $list[$status_id] : null;
     }
 
     /**
@@ -65,6 +72,10 @@ class User extends ActiveRecord implements IdentityInterface
         return [
             ['status', 'default', 'value' => self::STATUS_DISABLED],
             ['status', 'in', 'range' => array_keys(self::getStatusList())],
+            ['password', 'safe'],
+            ['username', 'string'],
+            ['email', 'email'],
+            [['username', 'status', 'email'], 'required']
         ];
     }
 

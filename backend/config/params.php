@@ -17,13 +17,13 @@ return [
             'options' => [],
             'items' => [],
         ],
-        'comments' => [
+        /*'comments' => [
             'visible' => 1,
             'label' => Yii::t('app', 'Comments'),
             'img' => 'comment',
             'url' => "/comments",
             'options' => [],
             'items' => [],
-        ],
+        ],*/
     ],
 ];
