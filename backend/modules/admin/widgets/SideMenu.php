@@ -43,7 +43,8 @@ class SideMenu extends \yii\bootstrap\Widget {
         $items = $this->loadMenu();
         $list = $this->renderItems($items);
         $container = Html::tag('div', $list, ['class' => 'sidebar-collapse']);
-        echo Html::tag('nav', $container, ['class' => 'navbar-inverse navbar-static-side']);
+        $class_minimize = ($_COOKIE['min_show']) ? 'minimize' : '';
+        echo Html::tag('nav', $container, ['class' => 'navbar-inverse navbar-static-side ' . $class_minimize]);
     }
 
     private function renderItems($items, $depth = 0) {
@@ -62,6 +63,12 @@ class SideMenu extends \yii\bootstrap\Widget {
             }
             $values[] = $this->renderItem($item, $depth);
         }
+
+        if($depth == 1) {
+            $arrow = ($_COOKIE['min_show']) ? 'right' : 'left';
+            $values[] = Html::a((Icon::show('angle-double-' . $arrow)), '#', ['class' => 'minimize-nav-but']);
+        }
+
         return Html::tag('ul', implode("\n", $values), $dropdown_options);
     }
 
@@ -92,6 +99,6 @@ class SideMenu extends \yii\bootstrap\Widget {
             $linkOptions['data-method'] = 'post';
             $items = '';
         }
-        return Html::tag('li', Html::a(($img . " " . $label), $url, $linkOptions) . $items, $options);
+        return Html::tag('li', Html::a(($img . " " . Html::tag('span', $label)), $url, $linkOptions) . $items, $options);
     }
 }

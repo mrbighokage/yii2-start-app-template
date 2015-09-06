@@ -413,3 +413,36 @@ table.dataTable thead .sorting:after {
 .table img {
     width: 100px;
 }
+
+.navbar-static-side.minimize {
+    width: 50px!important;
+}
+
+.navbar-static-side.minimize span {
+    display: none;
+}
+
+#page-wrapper.maximize {
+    margin: 0 0 0 50px!important;
+}
+
+.minimize-nav-but {
+    position: absolute;
+    height: 40px;
+    width: 50px;
+    left: 0;
+    bottom: -40px;
+
+    padding: 10px 15px;
+    background-color: #222222;
+}
+
+.navbar-static-side.minimize ul li,
+.navbar-static-side.minimize .side-nav > li.dropdown > ul.dropdown-menu {
+    width: 50px!important;
+    overflow: hidden;
+}
+
+.navbar-static-side.minimize .nav-second-level li a {
+    padding-left: 15px;
+}

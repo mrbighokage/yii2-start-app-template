@@ -21,11 +21,46 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
+        'hover' => true,
+        'showPageSummary' => false,
+        'responsive' => true,
+        'showFooter' => false,
+        'export' => false,
+        'pjax' => true,
+        'bordered' => true,
+        'striped' => false,
+        'condensed' => false,
         'panel' => [
-            'heading' => Html::tag('h3', Icon::show('lock') . Yii::t('users', 'Users'), ['class' => 'panel-title']) ,
-            'type' => 'default',
-            'before' => Html::a(Icon::show('plus') . Yii::t('users', 'New'), ['create'], ['class' => 'btn btn-success']),
-            'after' => Html::a(Icon::show('repeat') . Yii::t('users', 'Reset'), ['index'], ['class' => 'btn btn-info'])
+            'heading' => Html::tag('h3', Icon::show('users') . Yii::t('users', 'Users'), ['class' => 'panel-title']) ,
+            //'before' => Html::a(Icon::show('plus') . Yii::t('users', 'New'), ['create'], ['class' => 'btn btn-success']),
+            //'after' => Html::a(Icon::show('repeat') . Yii::t('users', 'Reset'), ['index'], ['class' => 'btn btn-info']),
+            'type' => GridView::TYPE_DEFAULT,
+        ],
+        /*'beforeHeader'=>[
+            [
+                'columns'=>[
+                    ['content'=>'Header Before 1', 'options'=>['colspan'=>4, 'class'=>'text-center warning']],
+                    ['content'=>'Header Before 2', 'options'=>['colspan'=>4, 'class'=>'text-center warning']],
+                    ['content'=>'Header Before 3', 'options'=>['colspan'=>3, 'class'=>'text-center warning']],
+                ],
+                'options'=>['class'=>'skip-export'] // remove this row from export
+            ]
+        ],*/
+        'toolbar' => [
+            [
+                'content'=>
+                    Html::a(Icon::show('plus'), ['create'], [
+                        //'type'=>'button',
+                        'title'=>Yii::t('users', 'Add User'),
+                        'class'=>'btn btn-success'
+                    ]) . ' '.
+                    Html::a(Icon::show('repeat'), ['index'], [
+                        'class' => 'btn btn-default',
+                        'title' => Yii::t('users', 'Reset Grid')
+                    ]),
+            ],
+            /*'{export}',
+            '{toggleData}'*/
         ],
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
@@ -38,7 +73,6 @@ $this->params['breadcrumbs'][] = $this->title;
                     return  User::getStatus($model->status);
                 }
             ],
-            'updated_at:datetime',
             'created_at:datetime',
             [
                 'header' => Yii::t('users', 'Actions'),

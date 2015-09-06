@@ -19,9 +19,11 @@ class AppAsset extends AssetBundle
     public $baseUrl = '@web/themes/sb_admin';
 
     public $css = [
-        'css/admin.css'
+        'css/admin.css',
+        'css/style.css'
     ];
     public $js = [
+        'js/jquery.cookie.js',
         'js/admin.js'
     ];
     public $depends = [

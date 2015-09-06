@@ -15,6 +15,7 @@ use kartik\icons\Icon;
 AppAsset::register($this);
 Icon::map($this); // default Icon::FA
 
+$class_maximize = ($_COOKIE['min_show']) ? 'maximize' : '';
 ?>
 <?php $this->beginPage() ?>
     <!DOCTYPE html>
@@ -36,7 +37,7 @@ Icon::map($this); // default Icon::FA
         echo SideMenu::widget(['class' => $this]);
         ?>
 
-        <div id="page-wrapper">
+        <div id="page-wrapper" class="<?= $class_maximize ?>">
             <div class="row">
                 <div class="col-lg-12">
                     <h1 class="page-header"><?= $this->title ?></h1>
