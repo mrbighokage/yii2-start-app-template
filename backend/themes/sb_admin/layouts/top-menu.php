@@ -136,10 +136,10 @@ echo Nav::widget([
             'url' => ['/site/index'],
             'active' => false,
             'items' => [
-                /*[
+                [
                     'label' => '<i class="fa fa-user fa-fw"></i> ' . Yii::t('app', 'Profile'),
-                    'url' => "users/view?id=" . Yii::$app->user->id,
-                ],*/
+                    'url' => ['/users/default/view', 'id' => Yii::$app->user->id],
+                ],
                 /* [
                      'label' => '<i class="fa fa-gear fa-fw"></i> Settings',
                      'url' => "#",
