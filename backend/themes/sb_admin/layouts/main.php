@@ -15,7 +15,7 @@ use kartik\icons\Icon;
 AppAsset::register($this);
 Icon::map($this); // default Icon::FA
 
-$class_maximize = ($_COOKIE['min_show']) ? 'maximize' : '';
+$class_maximize = Yii::$app->request->cookies->get('min_show') ? 'maximize' : '';
 ?>
 <?php $this->beginPage() ?>
     <!DOCTYPE html>

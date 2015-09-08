@@ -43,7 +43,7 @@ class SideMenu extends \yii\bootstrap\Widget {
         $items = $this->loadMenu();
         $list = $this->renderItems($items);
         $container = Html::tag('div', $list, ['class' => 'sidebar-collapse']);
-        $class_minimize = ($_COOKIE['min_show']) ? 'minimize' : '';
+        $class_minimize = (Yii::$app->request->cookies->get('min_show')) ? 'minimize' : '';
         echo Html::tag('nav', $container, ['class' => 'navbar-inverse navbar-static-side ' . $class_minimize]);
     }
 

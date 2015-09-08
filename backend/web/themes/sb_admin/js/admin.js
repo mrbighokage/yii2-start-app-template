@@ -15,14 +15,53 @@ $(function() {
         if($(this).children('.fa-angle-double-left').length) {
             $t.removeClass('fa-angle-double-left');
             $t.addClass('fa-angle-double-right');
-            $.cookie(MIN_SHOW, 1, {expires: 30, path: '/'} );
+            setYiiCookie(MIN_SHOW, 1);
+            //$.cookie(MIN_SHOW, 1, {expires: 30, path: '/'} );
         } else {
             $t.removeClass('fa-angle-double-right');
             $t.addClass('fa-angle-double-left');
-            $.cookie(MIN_SHOW, 0, {expires: 30, path: '/'} );
+            setYiiCookie(MIN_SHOW, 0);
+            //$.cookie(MIN_SHOW, 0, {expires: 30, path: '/'} );
         }
     });
 });
+
+function setYiiCookie($key, $value) {
+    $.ajax({
+        dataType: 'json',
+        method: 'POST',
+        url: 'admin/default/set-cookie',
+        data: {
+            key: $key,
+            value: $value
+        }
+    }).done(function(data) {
+        if(data.code == "200") {
+        } else {
+            console.log(data.message);
+        }
+    });
+}
+
+function getYiiCookie($key) {
+    $cookie = '';
+    $.ajax({
+        dataType: 'json',
+        method: 'POST',
+        async: false,
+        url: 'admin/default/get-cookie',
+        data: {
+            key: $key
+        }
+    }).done(function(data) {
+        if(data.code == "200") {
+            $cookie = data.value;
+        } else {
+            console.log(data.message);
+        }
+    });
+    return $cookie;
+}
 
 function insertParam(key, value) {
     key = encodeURI(key); value = encodeURI(value);

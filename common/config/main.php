@@ -24,6 +24,10 @@ return [
                 'users' => [
                     'class' => 'yii\i18n\DbMessageSource',
                     'forceTranslation' => false,
+                ],
+                'admin' => [
+                    'class' => 'yii\i18n\DbMessageSource',
+                    'forceTranslation' => false,
                 ]
             ],
         ],
