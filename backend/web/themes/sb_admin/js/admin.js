@@ -63,7 +63,7 @@ function getYiiCookie($key) {
     return $cookie;
 }
 
-function insertParam(key, value) {
+function setUrlParam(key, value) {
     key = encodeURI(key); value = encodeURI(value);
 
     var kvp = document.location.search.substr(1).split('&');
@@ -84,3 +84,18 @@ function insertParam(key, value) {
     //this will reload the page, it's likely better to store this until finished
     document.location.search = kvp.join('&');
 }
+
+function getUrlParam(sParam) {
+    var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+        sURLVariables = sPageURL.split('&'),
+        sParameterName,
+        i;
+
+    for (i = 0; i < sURLVariables.length; i++) {
+        sParameterName = sURLVariables[i].split('=');
+
+        if (sParameterName[0] === sParam) {
+            return sParameterName[1] === undefined ? true : sParameterName[1];
+        }
+    }
+};
