@@ -4,39 +4,20 @@ namespace frontend\modules\site\controllers;
 
 use Yii;
 
-use yii\web\Controller;
-use yii\filters\AccessControl;
-
+use frontend\components\AppController;
 use frontend\modules\site\models\forms\ContactForm;
 
 /**
  * Site controller
  */
-class DefaultController extends Controller
+class DefaultController extends AppController
 {
     /**
      * @inheritdoc
      */
     public function behaviors()
     {
-        return [
-            /*'access' => [
-                'class' => AccessControl::className(),
-                'only' => ['logout', 'signup'],
-                'rules' => [
-                    [
-                        'actions' => ['signup'],
-                        'allow' => true,
-                        'roles' => ['?'],
-                    ],
-                    [
-                        'actions' => ['logout'],
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ],
-                ],
-            ],*/
-        ];
+        return [];
     }
 
     /**

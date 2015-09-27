@@ -3,11 +3,9 @@
 namespace backend\modules\admin;
 
 use Yii;
+use backend\components\AppModule;
 
-// ********************
-// root backend module
-// ********************
-class Module extends \yii\base\Module
+class Module extends AppModule
 {
     public $controllerNamespace = 'backend\modules\admin\controllers';
 
