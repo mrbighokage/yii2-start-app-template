@@ -7,6 +7,7 @@ use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use yii\base\InvalidParamException;
 use yii\web\BadRequestHttpException;
+use yii\authclient\ClientInterface;
 
 use frontend\modules\users\models\forms\PasswordResetRequestForm;
 use frontend\modules\users\models\forms\ResetPasswordForm;
@@ -28,7 +29,7 @@ class DefaultController extends AppController
                 'only' => ['logout', 'signup'],
                 'rules' => [
                     [
-                        'actions' => ['signup'],
+                        'actions' => ['signup, auth'],
                         'allow' => true,
                         'roles' => ['?'],
                     ],
@@ -43,6 +44,10 @@ class DefaultController extends AppController
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'logout' => ['post'],
+                ],
+                'auth' => [
+                    'class' => 'yii\authclient\AuthAction',
+                    'successCallback' => [$this, 'onAuthSuccess'],
                 ],
             ],
         ];
@@ -62,6 +67,50 @@ class DefaultController extends AppController
                 'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
             ],
         ];
+    }
+
+    /**
+     * @param $client
+     *
+     * TODO
+     */
+    public function onAuthSuccess(ClientInterface $client)
+    {
+        $attributes = $client->getUserAttributes();
+
+        /* @var $auth UserAuth */
+        $auth = UserAuth::find()->where([
+            'source'    => $client->getId(),
+            'source_id' => $attributes['id'],
+        ])->one();
+
+        if (Yii::$app->user->isGuest) {
+            if ($auth) {
+                $user = $auth->user;
+                Yii::$app->user->login($user);
+            } else {
+                if (isset($attributes['email']) && User::find()->where(['email' => $attributes['email']])->exists()) {
+                    Yii::$app->getSession()->setFlash('error', [
+                        Yii::t('app',
+                            "User with the same email as in {client} account already exists but isn't linked to it. Login using email first to link it.",
+                            ['client' => $client->getTitle()]),
+                    ]);
+                } else {
+                    if($client->signInOpenTute()) {
+                        $this->redirect('/profile');
+                    }
+                }
+            }
+        } else {
+            if (!$auth) {
+                $auth = new UserAuth([
+                    'user_id'   => Yii::$app->user->id,
+                    'source'    => $client->getId(),
+                    'source_id' => $attributes['id'],
+                ]);
+                $auth->save();
+            }
+        }
     }
 
     public function actionIndex()

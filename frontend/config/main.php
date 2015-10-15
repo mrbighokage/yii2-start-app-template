@@ -23,6 +23,7 @@ return [
                 // global rule
                 // ModuleID/ControllerID/ActionID
 
+                '<action:auth>' => 'users/default/auth',
                 '<action:about|contact|index>' => 'site/default/<action>',
                 '<action:signup|login|logout>' => 'users/default/<action>',
 
@@ -53,6 +54,7 @@ return [
         'user' => [
             'identityClass' => 'common\modules\users\models\User',
             'enableAutoLogin' => false,
+            'loginUrl' => ['users/default/login'],
         ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
@@ -63,6 +65,26 @@ return [
                 ],
             ],
         ],
+        'authClientCollection' => [
+            'class'   => 'yii\authclient\Collection',
+            'clients' => [
+                'google'   => [
+                    'class'        => 'frontend\modules\users\components\OAuthGoogleClient',
+                    //'clientId'     => '130875484425-fdi9vuitu9ua25bn76j8vgbt4o9kjmsj.apps.googleusercontent.com',
+                    //'clientSecret' => 'AJptAA7wOVv4T3DmlB4XuOC-',
+                ],
+                'facebook' => [
+                    'class'        => 'frontend\modules\users\components\OAuthFacebookClient',
+                    //'clientId'     => '975550292496100',
+                    //'clientSecret' => 'fce19970b990890aac1e98f44dd6d6e8',
+                ],
+                'linkedin' => [
+                    'class'        => 'frontend\modules\users\components\OAuthLinkedInClient',
+                    //'clientId'     => '77bkixqhqz12lu',
+                    //'clientSecret' => 'VKNoeKgwyTXVWozH',
+                ],
+            ],
+        ]
     ],
     'modules' => [
         'site' => [
