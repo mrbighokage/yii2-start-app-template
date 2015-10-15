@@ -1,10 +1,9 @@
 <?php
 
-use yii\db\Schema;
 use yii\db\Migration;
 use common\modules\users\models\User;
 
-class m130524_201442_init extends Migration
+class m130524_201442_users extends Migration
 {
     public function up()
     {
@@ -17,16 +16,20 @@ class m130524_201442_init extends Migration
         $this->createTable(User::tableName(), [
             'id' => $this->primaryKey(),
             'username' => $this->string()->notNull()->unique(),
+            'email' => $this->string()->notNull()->unique(),
+
             'auth_key' => $this->string(32)->notNull(),
             'password_hash' => $this->string()->notNull(),
             'password_reset_token' => $this->string()->unique(),
-            'email' => $this->string()->notNull()->unique(),
 
-            'status' => $this->smallInteger()->notNull()->defaultValue(User::STATUS_DISABLED),
+            'first_name' => $this->string(32),
+            'last_name' => $this->string(32),
+
+            'avatar' => $this->string(255),
+
             'created_at' => $this->integer()->notNull(),
             'updated_at' => $this->integer()->notNull(),
         ], $tableOptions);
-
     }
 
     public function down()
