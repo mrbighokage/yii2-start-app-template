@@ -17,7 +17,6 @@ use yii\web\IdentityInterface;
  * @property string $password_reset_token
  * @property string $email
  * @property string $auth_key
- * @property integer $status
  * @property integer $created_at
  * @property integer $updated_at
  * @property string $password write-only password
@@ -25,33 +24,28 @@ use yii\web\IdentityInterface;
 class User extends ActiveRecord implements IdentityInterface
 {
 
-    const STATUS_DISABLED = 0;
-    const STATUS_ACTIVE = 1;
-    const STATUS_BANNED = 2;
-    const STATUS_DELETED = 3;
+    // default isGuest
+    const ROLE_GUEST = 0;
+
+    // active user
+    const ROLE_ADMIN = 1;
+    const ROLE_USER = 2;
+
+    // inactive user
+    const ROLE_DISABLE = 10;
+    const ROLE_BANNED = 11;
+
+    // permissions
+    const PERMISSION_ADMIN = 'AdminPermissionKey';
 
     public $password;
-
-    public static function getStatusList() {
-        return [
-            self::STATUS_ACTIVE => Yii::t('users', 'Active'),
-            self::STATUS_BANNED => Yii::t('users', 'Banned'),
-            self::STATUS_DELETED => Yii::t('users', 'Deleted'),
-            self::STATUS_DISABLED => Yii::t('users', 'Disabled'),
-        ];
-    }
-
-    public static function getStatus($status_id) {
-        $list = self::getStatusList();
-        return isset($list[$status_id]) ? $list[$status_id] : null;
-    }
 
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return '{{%user}}';
+        return '{{%users}}';
     }
 
     /**
@@ -70,8 +64,6 @@ class User extends ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
-            ['status', 'default', 'value' => self::STATUS_DISABLED],
-            ['status', 'in', 'range' => array_keys(self::getStatusList())],
             ['password', 'safe'],
             ['username', 'string'],
             ['email', 'email'],
@@ -84,7 +76,11 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public static function findIdentity($id)
     {
-        return static::findOne(['id' => $id, 'status' => self::STATUS_ACTIVE]);
+        $userPermissions = Yii::$app->authManager->getRolesByUser($id);
+        if($userPermissions && isset($userPermissions[User::ROLE_USER])) {
+            return static::findOne(['id' => $id]);
+        }
+        return null;
     }
 
     /**
@@ -103,7 +99,12 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public static function findByUsername($username)
     {
-        return static::findOne(['username' => $username, 'status' => self::STATUS_ACTIVE]);
+        $user = static::findOne(['username' => $username]);
+        $userPermissions = Yii::$app->authManager->getRolesByUser($user->id);
+        if($userPermissions && isset($userPermissions[User::ROLE_USER])) {
+            return $user;
+        }
+        return null;
     }
 
     /**
@@ -118,10 +119,15 @@ class User extends ActiveRecord implements IdentityInterface
             return null;
         }
 
-        return static::findOne([
+        $user = static::findOne([
             'password_reset_token' => $token,
-            'status' => self::STATUS_ACTIVE,
         ]);
+        $userPermissions = Yii::$app->authManager->getRolesByUser($user->id);
+        if($userPermissions && isset($userPermissions[User::ROLE_USER])) {
+            return $user;
+        }
+
+        return null;
     }
 
     /**
@@ -210,23 +216,10 @@ class User extends ActiveRecord implements IdentityInterface
         $this->password_reset_token = null;
     }
 
-    public static function getAdminPermissionKey() {
-        return 'AdminPermissionKey';
-    }
-
-    public static function getRoleAdminKey() {
-        return 'admin';
-    }
-
-    public static function getRoleUserKey() {
-        return 'user';
-    }
-
     public static  function createSuperAdmin() {
 
         if(!self::findByUsername(Yii::$app->params['admin.Username'])) {
             $user = new User();
-            $user->status = self::STATUS_ACTIVE;
             $user->password_reset_token = '';
             $user->username = Yii::$app->params['admin.Username'];
             $user->email = Yii::$app->params['admin.Email'];

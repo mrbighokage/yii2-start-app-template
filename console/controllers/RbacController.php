@@ -24,18 +24,26 @@ class RbacController extends Controller
     {
         $auth = Yii::$app->authManager;
 
+        // disable user
+        $disable = $auth->createRole(User::ROLE_DISABLE);
+        $auth->add($disable);
+
+        // banned user
+        $banned = $auth->createRole(User::ROLE_BANNED);
+        $auth->add($banned);
+
+        // add default user role
+        $user = $auth->createRole(User::ROLE_USER);
+        $auth->add($user);
+
         // add "useAdminPanel" permission
-        $adminPermission = $auth->createPermission(User::getAdminPermissionKey());
+        $adminPermission = $auth->createPermission(User::PERMISSION_ADMIN);
         $adminPermission->description = '';
         $auth->add($adminPermission);
 
-        // add "user" role and give this role the "createPost" permission
-        $user = $auth->createRole(User::getRoleUserKey());
-        $auth->add($user);
-
-        // add "admin" role and give this role the "updatePost" permission
+        // add "admin" role
         // as well as the permissions of the "author" role
-        $admin = $auth->createRole(User::getRoleAdminKey());
+        $admin = $auth->createRole(User::ROLE_ADMIN);
         $auth->add($admin);
         $auth->addChild($admin, $user);
         $auth->addChild($admin, $adminPermission);
