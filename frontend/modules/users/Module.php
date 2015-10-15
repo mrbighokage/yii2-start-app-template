@@ -3,8 +3,9 @@
 namespace frontend\modules\users;
 
 use Yii;
+use frontend\components\AppModule;
 
-class Module extends \frontend\modules\site\Module
+class Module extends AppModule
 {
     public $controllerNamespace = 'frontend\modules\users\controllers';
 

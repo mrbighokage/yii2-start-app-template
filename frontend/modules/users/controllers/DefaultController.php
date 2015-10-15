@@ -3,7 +3,6 @@
 namespace frontend\modules\users\controllers;
 
 use Yii;
-use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use yii\base\InvalidParamException;
@@ -13,8 +12,9 @@ use frontend\modules\users\models\forms\PasswordResetRequestForm;
 use frontend\modules\users\models\forms\ResetPasswordForm;
 use frontend\modules\users\models\forms\SignupForm;
 use frontend\modules\users\models\forms\LoginForm;
+use frontend\components\AppController;
 
-class DefaultController extends Controller
+class DefaultController extends AppController
 {
 
     /**
