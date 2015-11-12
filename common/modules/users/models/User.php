@@ -6,6 +6,7 @@ use Yii;
 use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
+use yii\debug\models\search\Profile;
 use yii\web\IdentityInterface;
 
 /**
@@ -20,12 +21,10 @@ use yii\web\IdentityInterface;
  * @property integer $created_at
  * @property integer $updated_at
  * @property string $password write-only password
+ * @property string $role
  */
 class User extends ActiveRecord implements IdentityInterface
 {
-
-    // default isGuest
-    const ROLE_GUEST = 0;
 
     // active user
     const ROLE_ADMIN = 1;
@@ -41,6 +40,7 @@ class User extends ActiveRecord implements IdentityInterface
     const PERMISSION_USER_LOGIN = 'UserPermissionLogin';
 
     public $password;
+    public $role;
 
     /**
      * @inheritdoc
@@ -69,6 +69,7 @@ class User extends ActiveRecord implements IdentityInterface
             ['password', 'safe'],
             ['username', 'string'],
             ['email', 'email'],
+            ['role', 'in', 'range' => array_keys(self::getRolesList())],
             [['username', 'email'], 'required']
         ];
     }
@@ -237,5 +238,48 @@ class User extends ActiveRecord implements IdentityInterface
                 $auth->assign($auth->getRole(User::ROLE_ADMIN), $user->getId());
             }
         }
+    }
+
+    public static function getRolesList() {
+        $roles = [];
+        foreach(Yii::$app->authManager->getRoles() as $role) {
+            $roles[$role->name] = $role->description;
+        }
+        return $roles;
+    }
+
+    public function beforeSave($insert)
+    {
+        if (parent::beforeSave($insert)) {
+            if($this->isNewRecord) {
+               //...
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public static function changeRole($role_name, $user_id) {
+        $auth = Yii::$app->getAuthManager();
+        $role = $auth->getRole($role_name);
+
+        // if super user id = 1
+        // role not change
+        if(($user_id == 1)) {
+            Yii::$app->getSession()->setFlash('warning', Yii::t('users', 'Can not change user role for super admin'));
+            return false;
+        }
+
+        if($role) {
+            $model = new User();
+            $transaction = $model->getDb()->beginTransaction();
+
+            $auth->revokeAll($user_id);
+            $auth->assign($role, $user_id);
+
+            $transaction->commit();
+        }
+        return true;
     }
 }

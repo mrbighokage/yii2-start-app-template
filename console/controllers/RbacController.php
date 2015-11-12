@@ -34,11 +34,6 @@ class RbacController extends Controller
         $banned->description = 'User Banned';
         $auth->add($banned);
 
-        // add default user role
-        $guest = $auth->createRole(User::ROLE_GUEST);
-        $guest->description = 'Guest Role';
-        $auth->add($guest);
-
         // add user login permission
         $userPermission = $auth->createPermission(User::PERMISSION_USER_LOGIN);
         $userPermission->description = 'Permission User Login';
@@ -48,7 +43,6 @@ class RbacController extends Controller
         $user = $auth->createRole(User::ROLE_USER);
         $user->description = 'User Default Role';
         $auth->add($user);
-        $auth->addChild($user, $guest);
         $auth->addChild($user, $userPermission);
 
         // add moderator role

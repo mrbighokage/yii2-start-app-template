@@ -39,9 +39,7 @@ return [
          * */
         'authManager' => [
             'class' => 'yii\rbac\DbManager',
-            /*'defaultRoles' => [
-                common\modules\users\models\User::ROLE_GUEST
-            ]*/
+            /*'defaultRoles' => []*/
         ],
     ],
 ];

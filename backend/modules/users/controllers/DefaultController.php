@@ -9,6 +9,8 @@ use yii\filters\AccessControl;
 use yii\web\NotFoundHttpException;
 
 use common\modules\users\models\User;
+use common\modules\users\models\UserProfile;
+
 use backend\modules\users\models\forms\LoginForm;
 use backend\modules\users\models\search\SearchUser;
 
@@ -124,9 +126,17 @@ class DefaultController extends Controller
             $model->generateAuthKey();
 
             if($model->save()) {
-                // the following three lines were added:
-                $auth = Yii::$app->authManager;
-                $auth->assign($auth->getRole('user'), $model->getId());
+
+                // change role
+                if(!$model->role) {
+                    $model->role = User::ROLE_USER;
+                }
+                User::changeRole($model->role, $model->getId());
+
+                // create profile
+                $profile = new UserProfile();
+                $profile->user_id = $model->id;
+                $profile->save(false);
             }
 
             return $this->redirect(['view', 'id' => $model->id]);
@@ -154,7 +164,9 @@ class DefaultController extends Controller
                 $model->generateAuthKey();
             }
 
-            $model->save();
+            if($model->save()) {
+                User::changeRole($model->role, $model->getId());
+            }
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('update', [

@@ -3,11 +3,12 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use kartik\select2\Select2;
+use common\modules\users\models\User;
 
-/* @var $this yii\web\View */
-/* @var $model common\modules\users\models\User */
-/* @var $form yii\widgets\ActiveForm */
-
+$role = current(Yii::$app->getAuthManager()->getRolesByUser($model->id));
+if($role) {
+    $model->role = $role->name;
+}
 ?>
 
 <div class="user-form">
@@ -17,7 +18,17 @@ use kartik\select2\Select2;
     <?= $form->field($model, 'username')->textInput() ?>
     <?= $form->field($model, 'email')->textInput() ?>
 
+    <?= $form->field($model, 'role')->widget(Select2::classname(), [
+            'data' => User::getRolesList(),
+            'language' => 'en',
+            'options' => ['placeholder' => 'Select a role ...'],
+            'pluginOptions' => [
+                'allowClear' => true
+            ],
+    ]); ?>
+
     <?= $form->field($model, 'password')->passwordInput() ?>
+
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
