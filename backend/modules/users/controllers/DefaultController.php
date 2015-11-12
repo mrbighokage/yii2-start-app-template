@@ -27,10 +27,12 @@ class DefaultController extends Controller
                     [
                         'actions' => ['login'],
                         'allow' => true,
+                        'roles' => ['?'],
                     ],
                     [
+                        'actions' => ['logout', 'index', 'view', 'create', 'update', 'delete'],
                         'allow' => true,
-                        'roles' => ['admin'],
+                        'roles' => [User::ROLE_ADMIN],
                     ],
                 ],
             ],
@@ -169,7 +171,7 @@ class DefaultController extends Controller
      */
     public function actionDelete($id)
     {
-        if($id==1) {
+        if($id == 1) {
             Yii::$app->getSession()->setFlash('error', Yii::t('users', 'User admin can not be removed'));
         } else {
             $this->findModel($id)->delete();

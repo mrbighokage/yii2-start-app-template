@@ -5,6 +5,7 @@ use Yii;
 use yii\base\Model;
 
 use common\modules\users\models\User;
+use common\modules\users\models\UserProfile;
 
 /**
  * Signup form
@@ -14,6 +15,7 @@ class SignupForm extends Model
     public $username;
     public $email;
     public $password;
+    public $repeat_password;
 
     /**
      * @inheritdoc
@@ -21,19 +23,20 @@ class SignupForm extends Model
     public function rules()
     {
         return [
+            [['username',  'email', 'password', 'repeat_password'], 'required'],
+
             ['username', 'filter', 'filter' => 'trim'],
             ['username', 'required'],
-            ['username', 'unique', 'targetClass' => '\common\models\User', 'message' => 'This username has already been taken.'],
+            ['username', 'unique', 'targetClass' => '\common\modules\users\models\User', 'message' => Yii::t('users', 'Этот логин уже зханят')],
             ['username', 'string', 'min' => 2, 'max' => 255],
 
             ['email', 'filter', 'filter' => 'trim'],
             ['email', 'required'],
             ['email', 'email'],
             ['email', 'string', 'max' => 255],
-            ['email', 'unique', 'targetClass' => '\common\models\User', 'message' => 'This email address has already been taken.'],
+            ['email', 'unique', 'targetClass' => '\common\modules\users\models\User', 'message' => Yii::t('users', 'Этот E-Mail уже есть в системе')],
 
-            ['password', 'required'],
-            ['password', 'string', 'min' => 6],
+            [['password', 'repeat_password'], 'string', 'min' => 6],
         ];
     }
 
@@ -51,15 +54,40 @@ class SignupForm extends Model
             $user->setPassword($this->password);
             $user->generateAuthKey();
 
-            // the following three lines were added:
-            $auth = Yii::$app->authManager;
-            $auth->assign($auth->getRole('user'), $user->getId());
-
+            // start transaction
+            $transaction = $user->getDb()->beginTransaction();
             if ($user->save()) {
+
+                // create empty profile
+                $profile = new UserProfile([
+                    'user_id' => $user->getId()
+                ]);
+                $profile->save();
+
+                // assign disable user role ROLE_DISABLE
+                $authManager = Yii::$app->authManager;
+                $authManager->assign($authManager->getRole(User::ROLE_DISABLE), $user->getId());
+
+                // end transaction
+                $transaction->commit();
+
                 return $user;
             }
         }
 
         return null;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function attributeLabels()
+    {
+        return [
+            'username'   => Yii::t('users', 'Логин'),
+            'email'    => Yii::t('users', 'E-Mail'),
+            'password' => Yii::t('users', 'Пароль'),
+            'repeat_password' => Yii::t('users', 'Повторите пароль')
+        ];
     }
 }

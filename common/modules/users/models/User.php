@@ -29,14 +29,16 @@ class User extends ActiveRecord implements IdentityInterface
 
     // active user
     const ROLE_ADMIN = 1;
-    const ROLE_USER = 2;
+    const ROLE_MODERATOR = 2;
+    const ROLE_USER = 3;
 
     // inactive user
     const ROLE_DISABLE = 10;
     const ROLE_BANNED = 11;
 
     // permissions
-    const PERMISSION_ADMIN = 'AdminPermissionKey';
+    const PERMISSION_ADMIN_LOGIN = 'AdminPermissionLogin';
+    const PERMISSION_USER_LOGIN = 'UserPermissionLogin';
 
     public $password;
 
@@ -45,7 +47,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public static function tableName()
     {
-        return '{{%users}}';
+        return '{{%user}}';
     }
 
     /**
@@ -67,7 +69,7 @@ class User extends ActiveRecord implements IdentityInterface
             ['password', 'safe'],
             ['username', 'string'],
             ['email', 'email'],
-            [['username', 'status', 'email'], 'required']
+            [['username', 'email'], 'required']
         ];
     }
 
@@ -76,8 +78,8 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public static function findIdentity($id)
     {
-        $userPermissions = Yii::$app->authManager->getRolesByUser($id);
-        if($userPermissions && isset($userPermissions[User::ROLE_USER])) {
+        $userPermissions = Yii::$app->authManager->getPermissionsByUser($id);
+        if($userPermissions && isset($userPermissions[User::PERMISSION_USER_LOGIN])) {
             return static::findOne(['id' => $id]);
         }
         return null;
@@ -100,9 +102,11 @@ class User extends ActiveRecord implements IdentityInterface
     public static function findByUsername($username)
     {
         $user = static::findOne(['username' => $username]);
-        $userPermissions = Yii::$app->authManager->getRolesByUser($user->id);
-        if($userPermissions && isset($userPermissions[User::ROLE_USER])) {
-            return $user;
+        if($user) {
+            $userPermissions = Yii::$app->authManager->getPermissionsByUser($user->getId());
+            if ($userPermissions && isset($userPermissions[User::PERMISSION_USER_LOGIN])) {
+                return $user;
+            }
         }
         return null;
     }
@@ -230,7 +234,7 @@ class User extends ActiveRecord implements IdentityInterface
 
                 // Assign role admin to root user
                 $auth = Yii::$app->authManager;
-                $auth->assign($auth->getRole(Yii::$app->params['admin.Username']), $user->getId());
+                $auth->assign($auth->getRole(User::ROLE_ADMIN), $user->getId());
             }
         }
     }

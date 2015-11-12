@@ -40,7 +40,7 @@ echo Nav::widget([
                 ],
             ]
         ],
-        [
+        /*[
             'label' => '<i class="fa fa-tasks fa-fw"></i>',
             'url' => ['/site/index'],
             'active' => false,
@@ -64,7 +64,7 @@ echo Nav::widget([
                     ],
                 ],
             ]
-        ],
+        ],*/
         [
             'label' => '<i class="fa fa-bell fa-fw"></i>',
             'url' => ['/site/index'],
@@ -153,7 +153,7 @@ echo Nav::widget([
                 ],
                 [
                     'label' => '<i class="fa fa-sign-out fa-fw"></i> ' . Yii::t('app', 'Logout'),
-                    'url' => ['/logout'],
+                    'url' => \yii\helpers\Url::toRoute(['/logout']),
                     'linkOptions' => ['data-method' => 'post']
                 ],
                 /*'url' => ['/site/logout'],

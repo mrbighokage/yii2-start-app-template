@@ -3,12 +3,11 @@
 namespace frontend\components;
 
 use Yii;
-use \yii\base\Module;
 
 /**
  * Root frontend module
  */
-class AppModule extends Module
+class AppModule extends \yii\base\Module
 {
     public function init()
     {

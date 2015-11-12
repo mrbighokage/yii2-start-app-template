@@ -1,8 +1,8 @@
 <?php
 return [
     'vendorPath' => dirname(dirname(__DIR__)) . '/vendor',
-    'sourceLanguage' => 'en-US', // source language
-    'language' => 'en-US', // current language
+    'sourceLanguage' => 'ru-RU', // source language
+    'language' => 'ru-RU', // current language
     'components' => [
         'cache' => [
             'class' => 'yii\caching\FileCache',
@@ -39,6 +39,9 @@ return [
          * */
         'authManager' => [
             'class' => 'yii\rbac\DbManager',
+            /*'defaultRoles' => [
+                common\modules\users\models\User::ROLE_GUEST
+            ]*/
         ],
     ],
 ];

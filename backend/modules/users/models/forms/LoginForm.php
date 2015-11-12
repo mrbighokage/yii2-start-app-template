@@ -13,7 +13,6 @@ class LoginForm extends Model
 {
     public $username;
     public $password;
-    public $rememberMe = true;
 
     private $_user;
 
@@ -26,8 +25,6 @@ class LoginForm extends Model
         return [
             // username and password are both required
             [['username', 'password'], 'required'],
-            // rememberMe must be a boolean value
-            ['rememberMe', 'boolean'],
             // password is validated by validatePassword()
             ['password', 'validatePassword'],
         ];
@@ -59,7 +56,7 @@ class LoginForm extends Model
     {
         if ($this->validate()) {
             $userPermissions = Yii::$app->authManager->getPermissionsByUser($this->getUser()->getId());
-            return ($userPermissions && isset($userPermissions[User::getAdminPermissionKey()])) ? Yii::$app->user->login($this->getUser()) : false;
+            return ($userPermissions && isset($userPermissions[User::PERMISSION_ADMIN_LOGIN])) ? Yii::$app->user->login($this->getUser()) : false;
         } else {
             return false;
         }

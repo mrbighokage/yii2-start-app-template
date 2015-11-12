@@ -18,7 +18,7 @@ class SearchUser extends User
     public function rules()
     {
         return [
-            [['id', 'status', 'created_at'], 'integer'],
+            [['id', 'created_at'], 'integer'],
             [['username', 'email'], 'string'],
             [['username', 'email'], 'safe'],
         ];
@@ -58,7 +58,6 @@ class SearchUser extends User
 
         $query->andFilterWhere([
             'id' => $this->id,
-            'status' => $this->status,
             'created_at' => $this->created_at,
         ]);
 

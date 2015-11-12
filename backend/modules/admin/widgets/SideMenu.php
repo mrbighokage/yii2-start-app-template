@@ -28,19 +28,13 @@ use kartik\icons\Icon;
  */
 
 class SideMenu extends \yii\bootstrap\Widget {
-    private $items = [];
 
-    private function loadMenu() {
-        return array_merge(
-            $this->items,
-            isset(Yii::$app->params['baseSideMenu']) ? Yii::$app->params['baseSideMenu'] : []
-        );
-    }
+    public $items = [];
 
     public function init() {
         parent::init();
         Html::addCssClass($this->options, 'nav');
-        $items = $this->loadMenu();
+        $items = $this->items;
         $list = $this->renderItems($items);
         $container = Html::tag('div', $list, ['class' => 'sidebar-collapse']);
         $class_minimize = (Yii::$app->request->cookies->get('min_show')) ? 'minimize' : '';

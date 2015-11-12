@@ -28,7 +28,7 @@ class OAuthGoogleClient extends GoogleOAuth
         }
     }
 
-    public function signInOpenTute() {
+    public function signIn() {
         $attributes = $this->getUserAttributes();
 
         $password = Yii::$app->security->generateRandomString(6);

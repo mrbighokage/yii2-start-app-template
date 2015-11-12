@@ -32,10 +32,6 @@ $this->params['breadcrumbs'][] = $this->title;
             'id',
             'username',
             'email:email',
-            [
-                'attribute' => 'status',
-                'value' => User::getStatus($model->status),
-            ],
             'created_at:datetime',
             'updated_at:datetime',
         ],

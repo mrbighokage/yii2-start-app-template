@@ -5,6 +5,7 @@
 
 use backend\themes\sb_admin\assets\AppAsset;
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\widgets\Breadcrumbs;
 
 use backend\modules\admin\widgets\SideMenu;
@@ -16,6 +17,13 @@ AppAsset::register($this);
 Icon::map($this); // default Icon::FA
 
 $class_maximize = Yii::$app->request->cookies->get('min_show') ? 'maximize' : '';
+
+$this->registerJs("
+    window.setTimeout(function () {
+        $('.alert').alert('close');
+    }, 5000);
+");
+
 ?>
 <?php $this->beginPage() ?>
     <!DOCTYPE html>
@@ -34,7 +42,33 @@ $class_maximize = Yii::$app->request->cookies->get('min_show') ? 'maximize' : ''
 
         <?php
         echo $this->render('//layouts/top-menu');
-        echo SideMenu::widget(['class' => $this]);
+        echo SideMenu::widget(['class' => $this, 'items' => [
+                'dashboard' => [
+                    'visible' => 1,
+                    'label' => Yii::t('app', 'Dashboard'),
+                    'img' => 'dashboard',
+                    'url' => Url::to('/'),
+                    'options' => [],
+                    'items' => [],
+                ],
+                'users' => [
+                    'visible' => 1,
+                    'label' => Yii::t('app', 'Users'),
+                    'img' => 'users',
+                    'url' => Url::to('/users'),
+                    'options' => [],
+                    'items' => [],
+                ],
+                /*'slides' => [
+                    'visible' => 1,
+                    'label' => Yii::t('app', 'Slides'),
+                    'img' => 'image',
+                    'url' => Url::to('/slides'),
+                    'options' => [],
+                    'items' => [],
+                ],*/
+            ]
+        ]);
         ?>
 
         <div id="page-wrapper" class="<?= $class_maximize ?>">

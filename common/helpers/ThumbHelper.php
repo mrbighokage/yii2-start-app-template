@@ -2,14 +2,14 @@
 
 namespace common\helpers;
 
+use Imagine\Image\Box;
+use Imagine\Image\ManipulatorInterface;
 use yii;
 use yii\base\ErrorException;
 use yii\helpers\ArrayHelper;
 use yii\helpers\FileHelper;
 use yii\helpers\Html;
 use yii\imagine\Image;
-use Imagine\Image\Box;
-use Imagine\Image\ManipulatorInterface;
 
 /*
  *
@@ -99,19 +99,23 @@ class ThumbHelper
         FileHelper::createDirectory($thumbDir);
 
         $mode = ArrayHelper::getValue($options, 'mode', ManipulatorInterface::THUMBNAIL_OUTBOUND);
-
         $box = new Box($width, $height);
 
         if(isset(Yii::$app->params['imageDriver']) && is_array(Yii::$app->params['imageDriver'])) {
             Image::$driver = Yii::$app->params['imageDriver'];
         }
 
-        $image = Image::getImagine()->open($file);
-        $image = $image->thumbnail($box, $mode);
+        $imagine = Image::getImagine();
+        if($imagine) {
 
-        $image->save($thumbPath);
+            $image = $imagine->open($file);
+            $image = $image->thumbnail($box, $mode);
+            $image->save($thumbPath);
 
-        return $thumbPath;
+            return $thumbPath;
+        } else {
+            throw new ErrorException("Error from driver " . get_class($imagine) . " ");
+        }
     }
 
     protected static function getFilePath($file)
@@ -150,7 +154,8 @@ class ThumbHelper
 
             return call_user_func($callback, $file, $width, $height, $options);
         } else {
-            throw new ErrorException("File $file doesn't exist");
+            //throw new ErrorException("File $file doesn't exist");
+            return '/uploads/no-image.jpg';
         }
     }
 }

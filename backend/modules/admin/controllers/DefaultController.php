@@ -8,6 +8,8 @@ use yii\filters\VerbFilter;
 use \yii\web\Cookie;
 use \yii\web\Response;
 
+use common\modules\users\models\User;
+
 /**
  * Site controller
  */
@@ -25,20 +27,18 @@ class DefaultController extends Controller
                     [
                         'actions' => ['error'],
                         'allow' => true,
-                        'roles' => ['?'],
+                        'roles' => ['@'],
                     ],
                     [
-                        //'actions' => ['index'],
+                        'actions' => ['index', 'set-cookie', 'get-cookie'],
                         'allow' => true,
-                        'roles' => ['@'],
+                        'roles' => [User::ROLE_ADMIN],
                     ],
                 ],
             ],
             'verbs' => [
                 'class' => VerbFilter::className(),
-                'actions' => [
-                    //'logout' => ['post'],
-                ],
+                'actions' => [],
             ],
         ];
     }

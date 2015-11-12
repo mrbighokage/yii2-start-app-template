@@ -16,14 +16,6 @@ use kartik\select2\Select2;
 
     <?= $form->field($model, 'username')->textInput() ?>
     <?= $form->field($model, 'email')->textInput() ?>
-    <?= $form->field($model, 'status')->widget(Select2::classname(), [
-        'data' => \common\modules\users\models\User::getStatusList(),
-        'language' => 'en',
-        'options' => ['placeholder' => 'Select Status'],
-        'pluginOptions' => [
-            'allowClear' => true
-        ],
-    ]); ?>
 
     <?= $form->field($model, 'password')->passwordInput() ?>
 

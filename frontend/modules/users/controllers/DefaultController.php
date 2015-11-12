@@ -2,6 +2,7 @@
 
 namespace frontend\modules\users\controllers;
 
+use common\modules\users\models\User;
 use Yii;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
@@ -13,6 +14,7 @@ use frontend\modules\users\models\forms\PasswordResetRequestForm;
 use frontend\modules\users\models\forms\ResetPasswordForm;
 use frontend\modules\users\models\forms\SignupForm;
 use frontend\modules\users\models\forms\LoginForm;
+use frontend\modules\users\models\UserAuth;
 use frontend\components\AppController;
 
 class DefaultController extends AppController
@@ -26,17 +28,16 @@ class DefaultController extends AppController
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['logout', 'signup'],
                 'rules' => [
                     [
-                        'actions' => ['signup, auth'],
+                            'actions' => ['signup', 'signin', 'request-password-reset', 'reset-password', 'auth'],
                         'allow' => true,
                         'roles' => ['?'],
                     ],
                     [
                         'actions' => ['logout'],
                         'allow' => true,
-                        'roles' => ['@'],
+                        'roles' => [User::ROLE_USER],
                     ],
                 ],
             ],
@@ -44,10 +45,6 @@ class DefaultController extends AppController
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'logout' => ['post'],
-                ],
-                'auth' => [
-                    'class' => 'yii\authclient\AuthAction',
-                    'successCallback' => [$this, 'onAuthSuccess'],
                 ],
             ],
         ];
@@ -59,12 +56,13 @@ class DefaultController extends AppController
     public function actions()
     {
         return [
-            'error' => [
-                'class' => 'yii\web\ErrorAction',
-            ],
             'captcha' => [
                 'class' => 'yii\captcha\CaptchaAction',
                 'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
+            ],
+            'auth' => [
+                'class' => 'yii\authclient\AuthAction',
+                'successCallback' => [$this, 'onAuthSuccess'],
             ],
         ];
     }
@@ -96,7 +94,7 @@ class DefaultController extends AppController
                             ['client' => $client->getTitle()]),
                     ]);
                 } else {
-                    if($client->signInOpenTute()) {
+                    if($client->signIn()) {
                         $this->redirect('/profile');
                     }
                 }
@@ -123,18 +121,20 @@ class DefaultController extends AppController
      *
      * @return mixed
      */
-    public function actionLogin()
+    public function actionSignin()
     {
         if (!\Yii::$app->user->isGuest) {
             return $this->goHome();
         }
 
         $model = new LoginForm();
+        $signUpModel = new SignupForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
             return $this->goBack();
         } else {
             return $this->render('login', [
                 'model' => $model,
+                'signUpModel' => $signUpModel
             ]);
         }
     }

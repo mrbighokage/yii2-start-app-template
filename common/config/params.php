@@ -9,5 +9,5 @@ return [
     'user.passwordResetTokenExpire' => 3600, // 1h
     'icon-framework' => 'fa',
 
-    'siteName' => 'Yii Template'
+    'siteName' => 'Company Name'
 ];

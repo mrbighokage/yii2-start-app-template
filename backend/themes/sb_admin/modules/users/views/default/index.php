@@ -16,8 +16,6 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="user-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
@@ -66,13 +64,6 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\SerialColumn'],
             'username',
             'email:email',
-            [
-                'attribute' => 'status',
-                'filter' => Html::activeDropDownList($searchModel, 'status',User::getStatusList(), ['class' => 'form-control', 'prompt' => Yii::t('users', 'Status')]),
-                'value' => function($model) {
-                    return  User::getStatus($model->status);
-                }
-            ],
             'created_at:datetime',
             [
                 'header' => Yii::t('users', 'Actions'),
@@ -89,7 +80,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             $link = Url::toRoute(['update', 'id' => $model->id]);
                             break;
                         case 'delete':
-                            $link = Url::toRoute(['update', 'id' => $model->id]);
+                            $link = Url::toRoute(['delete', 'id' => $model->id]);
                             break;
                     }
                     return $link;

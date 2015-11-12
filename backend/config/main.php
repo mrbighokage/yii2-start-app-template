@@ -29,34 +29,21 @@ return [
 
                 '<action:index>' => 'admin/default/<action>',
                 '<action:login|logout>' => 'users/default/<action>',
+
+                'slides/<action>' => 'slides/default/<action>',
+                'slides>' => 'slides/default/index',
             ]
         ],
         'errorHandler' => [
             'errorAction' => 'admin/default/error'
         ],
         'view' => [
-            'theme' => [
-                'basePath' => '@app/themes/sb_admin',
-                'baseUrl' => '@web/themes/sb_admin',
-                'pathMap' => [
-                    '@app/views' => [
-                        '@app/themes/sb_admin/modules/admin/views',
-                        '@app/themes/sb_admin',
-                    ],
-                    '@app/modules' => [
-                        '@app/themes/sb_admin/modules',
-                    ],
-                    '@app/modules/users/views' => [
-                        '@app/themes/sb_admin',
-                    ],
-
-                ],
-            ],
+            'theme' => 'backend\themes\sb_admin\Theme'
         ],
         'user' => [
             'identityClass' => 'common\modules\users\models\User',
             'enableAutoLogin' => false,
-            'loginUrl' => 'admin/login'
+            'loginUrl' => '/admin/login'
         ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
@@ -74,6 +61,9 @@ return [
         ],
         'users' => [
             'class' => 'backend\modules\users\Module'
+        ],
+        'slides' => [
+            'class' => 'backend\modules\slides\Module'
         ],
         'gridview' =>  [
             'class' => '\kartik\grid\Module'

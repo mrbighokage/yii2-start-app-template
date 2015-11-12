@@ -3,9 +3,11 @@
 namespace frontend\modules\site\controllers;
 
 use Yii;
+use yii\filters\AccessControl;
 
 use frontend\components\AppController;
 use frontend\modules\site\models\forms\ContactForm;
+use common\modules\users\models\User;
 
 /**
  * Site controller
@@ -17,7 +19,22 @@ class DefaultController extends AppController
      */
     public function behaviors()
     {
-        return [];
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'actions' => ['error', 'index', 'contact', 'captcha', 'development', 'about'],
+                        'allow' => true,
+                        'roles' => ['?'],
+                    ],
+                    [
+                        'allow' => true,
+                        'roles' => [User::ROLE_USER],
+                    ]
+                ],
+            ]
+        ];
     }
 
     /**
@@ -43,7 +60,8 @@ class DefaultController extends AppController
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        $this->showMainSlider = true;
+        return $this->render('index', []);
     }
 
     /**
@@ -56,9 +74,9 @@ class DefaultController extends AppController
         $model = new ContactForm();
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             if ($model->sendEmail(Yii::$app->params['adminEmail'])) {
-                Yii::$app->session->setFlash('success', 'Thank you for contacting us. We will respond to you as soon as possible.');
+                Yii::$app->session->setFlash('success', Yii::t('app', 'Спасибо за ваш вопрос.'));
             } else {
-                Yii::$app->session->setFlash('error', 'There was an error sending email.');
+                Yii::$app->session->setFlash('error', Yii::t('app', 'Ошибка отправки сообщения.'));
             }
 
             return $this->refresh();

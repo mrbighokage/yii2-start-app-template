@@ -1,8 +1,5 @@
 
 $(function() {
-    window.setTimeout(function () {
-        $(".alert").alert('close');
-    }, 5000);
 
     // minimize left menu
     const MIN_SHOW = 'min_show';
@@ -30,7 +27,7 @@ function setYiiCookie($key, $value) {
     $.ajax({
         dataType: 'json',
         method: 'POST',
-        url: 'admin/default/set-cookie',
+        url: '/admin/default/set-cookie',
         data: {
             key: $key,
             value: $value
@@ -49,7 +46,7 @@ function getYiiCookie($key) {
         dataType: 'json',
         method: 'POST',
         async: false,
-        url: 'admin/default/get-cookie',
+        url: '/admin/default/get-cookie',
         data: {
             key: $key
         }

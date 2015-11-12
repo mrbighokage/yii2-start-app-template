@@ -36,6 +36,12 @@ frontend/
     runtime/             contains files generated during runtime
     themes/              contains views template
     web/                 contains the entry script and Web resources
+static/
+    web/                 contains uploads folder
+        /uploads         main uploads folder
+            /users       user avatar
+            /cache       directory use ThumbHelper
+            /..          other uploads folder
 vendor/                  contains dependent 3rd-party packages
 environments/            contains environment-based overrides
 tests                    contains various tests for the advanced application
@@ -65,7 +71,7 @@ for example:
 You can then load framework/extension using the following command:
 
 ~~~
-# php composer.phar global require "fxp/composer-asset-plugin:1.0.0"
+# php composer.phar global require "fxp/composer-asset-plugin:1.1.0"
 # php -f composer.phar update
 ~~~
 
@@ -81,7 +87,6 @@ the installed application. You only need to do these once for all.
 + Apply migrations with console command `yii migrate`. This will create tables needed for the application to work.
 ~~~
 # yii migrate
-# yii migrate --migrationPath=@yii/rbac/migrations
 ~~~
 + Create user "admin" and default RBAC. Default password use from common\config\params.php
 ~~~

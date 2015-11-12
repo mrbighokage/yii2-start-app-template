@@ -29,12 +29,12 @@ class OAuthFacebookClient extends Facebook
        'picture'
    ];
 
-    public function signInOpenTute() {
+    public function signIn() {
         $attributes = $this->getUserAttributes();
 
         $password = Yii::$app->security->generateRandomString(6);
         $user = new User([
-            'email'    => $attributes['email'],
+            'email' => $attributes['email'],
             'password' => $password,
             'first_name' => isset($attributes['first_name']) ? $attributes['first_name'] : '',
             'last_name' => isset($attributes['last_name']) ? $attributes['last_name'] : ''

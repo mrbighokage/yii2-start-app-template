@@ -23,30 +23,23 @@ return [
                 // global rule
                 // ModuleID/ControllerID/ActionID
 
-                '<action:auth>' => 'users/default/auth',
                 '<action:about|contact|index>' => 'site/default/<action>',
-                '<action:signup|login|logout>' => 'users/default/<action>',
+                '<action:signup|signin|logout>' => 'users/default/<action>',
+                '<action:auth>' => 'users/default/auth',
+                '<action:development>' => 'site/default/development',
 
-                '<controller:site>/<action:captcha>' => 'site/default/<action>',
+                'site/site/captcha' => 'site/default/captcha',
+
+
+                'request-password-reset' => 'users/default/request-password-reset',
+                'reset-password' => 'users/default/reset-password'
             ]
         ],
         'errorHandler' => [
             'errorAction' => 'site/default/error'
         ],
         'view' => [
-            'theme' => [
-                'basePath' => '@app/themes/basic',
-                'baseUrl' => '@web/themes/basic',
-                'pathMap' => [
-                    '@app/views' => [
-                        '@app/themes/basic/modules/site/views',
-                        '@app/themes/basic',
-                    ],
-                    '@app/modules' => [
-                        '@app/themes/basic/modules',
-                    ]
-                ],
-            ],
+            'theme' => 'frontend\themes\basic\Theme'
         ],
         'request' => [
             'baseUrl' => '/',
@@ -66,7 +59,7 @@ return [
             ],
         ],
         'authClientCollection' => [
-            'class'   => 'yii\authclient\Collection',
+            'class' => 'yii\authclient\Collection',
             'clients' => [
                 'google'   => [
                     'class'        => 'frontend\modules\users\components\OAuthGoogleClient',
@@ -82,6 +75,16 @@ return [
                     'class'        => 'frontend\modules\users\components\OAuthLinkedInClient',
                     //'clientId'     => '77bkixqhqz12lu',
                     //'clientSecret' => 'VKNoeKgwyTXVWozH',
+                ],
+                'twitter' => [
+                    'class' => 'frontend\modules\users\components\OAuthTwitterClient',
+                    //'consumerKey' => 'twitter_consumer_key',
+                    //'consumerSecret' => 'twitter_consumer_secret',
+                ],
+                'vkontakte' => [
+                  'class' => 'frontend\modules\users\components\OAuthVKontakteClient',
+                  //'clientId' => 'vkontakte_client_id',
+                  //'clientSecret' => 'vkontakte_client_secret',
                 ],
             ],
         ]
