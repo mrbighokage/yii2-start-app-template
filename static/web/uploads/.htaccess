@@ -2,10 +2,8 @@
 
     RewriteEngine On
 
-    # If a directory or a file exists, use it directly
-    RewriteCond %{REQUEST_FILENAME} !-f
-    #RewriteCond %{REQUEST_FILENAME} !-d
-
+    # If file exists, use it directly
     # Otherwise forward it to no_image
+    RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule . /frontend/web/themes/basic/img/no-image.jpg
 </IfModule>
