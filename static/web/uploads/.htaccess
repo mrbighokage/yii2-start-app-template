@@ -7,5 +7,5 @@
     #RewriteCond %{REQUEST_FILENAME} !-d
 
     # Otherwise forward it to no_image
-    RewriteRule . /frontend/web/themes/chakra/img/no-image.jpg
+    RewriteRule . /frontend/web/themes/basic/img/no-image.jpg
 </IfModule>
