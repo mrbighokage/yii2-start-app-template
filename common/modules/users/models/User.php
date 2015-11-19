@@ -264,9 +264,14 @@ class User extends ActiveRecord implements IdentityInterface
         $auth = Yii::$app->getAuthManager();
         $role = $auth->getRole($role_name);
 
+        $activeRole = current($auth->getRolesByUser($user_id));
+        if($activeRole->name == $role_name) {
+            return true;
+        }
+
         // if super user id = 1
         // role not change
-        if(($user_id == 1)) {
+        if($user_id == 1) {
             Yii::$app->getSession()->setFlash('warning', Yii::t('users', 'Can not change user role for super admin'));
             return false;
         }
