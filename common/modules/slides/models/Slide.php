@@ -2,10 +2,11 @@
 
 namespace common\modules\slides\models;
 
-use common\helpers\ThumbHelper;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
+
+use common\helpers\ThumbHelper;
 
 /**
  * Slide model

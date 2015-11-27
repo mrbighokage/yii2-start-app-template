@@ -31,14 +31,55 @@ return [
                 '<action:login|logout>' => 'users/default/<action>',
 
                 'slides/<action>' => 'slides/default/<action>',
-                'slides>' => 'slides/default/index',
+                'slides' => 'slides/default/index',
             ]
         ],
         'errorHandler' => [
             'errorAction' => 'admin/default/error'
         ],
-        'view' => [
+        /*'view' => [
             'theme' => 'backend\themes\sb_admin\Theme'
+        ],*/
+        'view' => [
+            'theme' => [
+                'pathMap' => [
+                    '@app/views' => [
+                        '@app/views',
+                        '@app/modules/admin/views'
+                    ],
+                    '@app/modules/users/views' => [
+                        '@app/views',
+                    ],
+                    /*
+                        // base LTE theme
+                        // https://almsaeedstudio.com
+                        '@app/views' => '@vendor/dmstr/yii2-adminlte-asset/example-views/phundament/app'
+
+                        // customize views
+                        '@app/views' => [
+                            '@app/themes/sb_admin/modules/admin/views',
+                            '@app/themes/sb_admin',
+                        ],
+                                '@app/modules' => [
+                            '@app/themes/sb_admin/modules',
+                        ],
+                                '@app/modules/users/views' => [
+                            '@app/themes/sb_admin',
+                        ],
+                    */
+                ],
+            ],
+        ],
+        'assetManager' => [
+            'bundles' => [
+                'dmstr\web\AdminLteAsset' => [
+                    'skin' => 'skin-blue',
+                    /*
+                        "skin-blue",
+                        "skin-black",
+                    */
+                ],
+            ],
         ],
         'user' => [
             'identityClass' => 'common\modules\users\models\User',

@@ -45,24 +45,23 @@ class RbacController extends Controller
         $auth->add($user);
         $auth->addChild($user, $userPermission);
 
-        // add moderator role
-        $moderator = $auth->createRole(User::ROLE_MODERATOR);
-        $moderator->description = 'User Moderator Role';
-        $auth->add($moderator);
-        $auth->addChild($moderator, $user);
-
-        // add "useAdminPanel" permission
+        // add login to admin panel permission
         $adminPermission = $auth->createPermission(User::PERMISSION_ADMIN_LOGIN);
         $adminPermission->description = 'Permission Admin Login';
         $auth->add($adminPermission);
 
+        // add login to admin panel permission
+        $adminPermissionEdit = $auth->createPermission(User::PERMISSION_ADMIN_EDIT_ALL_CONTENT);
+        $adminPermissionEdit->description = 'Permission Admin edit all content';
+        $auth->add($adminPermissionEdit);
+
         // add "admin" role
-        // as well as the permissions of the "author" role
         $admin = $auth->createRole(User::ROLE_ADMIN);
         $admin->description = 'User Super Admin';
         $auth->add($admin);
-        $auth->addChild($admin, $moderator);
+        $auth->addChild($admin, $user);
         $auth->addChild($admin, $adminPermission);
+        $auth->addChild($admin, $adminPermissionEdit);
 
         // Create user admin assign roles
         User::createSuperAdmin();

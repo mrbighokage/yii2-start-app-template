@@ -15,7 +15,7 @@ class m130524_201442_users extends Migration
 
         $this->createTable(User::tableName(), [
             'id' => $this->primaryKey(),
-            'username' => $this->string()->notNull()->unique(),
+            'username' => $this->string(32)->notNull()->unique(),
             'email' => $this->string()->notNull()->unique(),
 
             'auth_key' => $this->string(32)->notNull(),
@@ -25,7 +25,7 @@ class m130524_201442_users extends Migration
             'first_name' => $this->string(32),
             'last_name' => $this->string(32),
 
-            'avatar' => $this->string(255),
+            'photo' => $this->string(255),
 
             'created_at' => $this->integer()->notNull(),
             'updated_at' => $this->integer()->notNull(),

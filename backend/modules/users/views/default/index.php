@@ -29,7 +29,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'striped' => false,
         'condensed' => false,
         'panel' => [
-            'heading' => Html::tag('h3', Icon::show('users') . Yii::t('users', 'Users'), ['class' => 'panel-title']) ,
+            'heading' => Html::tag('h3', Icon::show('users') . Yii::t('users', 'User list'), ['class' => 'panel-title']) ,
             //'before' => Html::a(Icon::show('plus') . Yii::t('users', 'New'), ['create'], ['class' => 'btn btn-success']),
             //'after' => Html::a(Icon::show('repeat') . Yii::t('users', 'Reset'), ['index'], ['class' => 'btn btn-info']),
             'type' => GridView::TYPE_DEFAULT,

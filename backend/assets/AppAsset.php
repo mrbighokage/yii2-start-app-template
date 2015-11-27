@@ -5,7 +5,7 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace backend\themes\sb_admin\assets;
+namespace backend\assets;
 
 use yii\web\AssetBundle;
 
@@ -15,15 +15,14 @@ use yii\web\AssetBundle;
  */
 class AppAsset extends AssetBundle
 {
-    public $basePath = '@app/themes/sb_admin';
-    public $baseUrl = '@web/themes/sb_admin';
+    public $basePath = '@app';
+    public $baseUrl = '@web';
 
     public $css = [
         'css/admin.css',
         'css/style.css'
     ];
     public $js = [
-        'js/jquery.cookie.js',
         'js/admin.js'
     ];
     public $depends = [

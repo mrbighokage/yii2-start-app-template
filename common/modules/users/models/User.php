@@ -6,30 +6,33 @@ use Yii;
 use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
-use yii\debug\models\search\Profile;
 use yii\web\IdentityInterface;
+
+use common\helpers\ThumbHelper;
 
 /**
  * User model
  *
  * @property integer $id
  * @property string $username
+ * @property string $email
+ * @property string $role
+ * @property string $photo
+ * @property string $first_name
+ * @property string $last_name
  * @property string $password_hash
  * @property string $password_reset_token
- * @property string $email
  * @property string $auth_key
+ * @property string $password write-only password
  * @property integer $created_at
  * @property integer $updated_at
- * @property string $password write-only password
- * @property string $role
  */
 class User extends ActiveRecord implements IdentityInterface
 {
 
     // active user
     const ROLE_ADMIN = 1;
-    const ROLE_MODERATOR = 2;
-    const ROLE_USER = 3;
+    const ROLE_USER = 2;
 
     // inactive user
     const ROLE_DISABLE = 10;
@@ -37,17 +40,24 @@ class User extends ActiveRecord implements IdentityInterface
 
     // permissions
     const PERMISSION_ADMIN_LOGIN = 'AdminPermissionLogin';
+    const PERMISSION_ADMIN_EDIT_ALL_CONTENT = 'AdminPermissionEditAllContent';
     const PERMISSION_USER_LOGIN = 'UserPermissionLogin';
 
     public $password;
     public $role;
 
     /**
+     * for uploaded file
+     */
+    public $photoFile;
+    private $dirName = 'users';
+
+    /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return '{{%user}}';
+        return '{{%users}}';
     }
 
     /**
@@ -66,11 +76,43 @@ class User extends ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
-            ['password', 'safe'],
-            ['username', 'string'],
+            ['password', 'string', 'min' => 6, 'max' => 30],
+            ['username', 'string', 'min' => 3, 'max' => 32],
             ['email', 'email'],
+            [['email', 'username'], 'unique'],
+            ['email', 'string', 'max' => 32],
             ['role', 'in', 'range' => array_keys(self::getRolesList())],
-            [['username', 'email'], 'required']
+            [['photo', 'first_name', 'last_name'], 'string', 'min' => 3, 'max' => 255],
+            [['photoFile'],
+                'image', 'skipOnEmpty' => false,
+                'extensions' => 'png, jpg',
+                'maxWidth' => 1024,
+                'maxHeight' => 1024,
+                'on' => ['upload']
+            ],
+            [['username', 'email'], 'required'],
+            [['password', 'username', 'email', 'first_name', 'last_name'], 'safe'],
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function scenarios()
+    {
+        return [
+            'upload' => [
+                'photoFile',
+                'photo'
+            ],
+            'default' => [
+                'password',
+                'username',
+                'email',
+                'role',
+                'first_name',
+                'last_name'
+            ]
         ];
     }
 
@@ -80,7 +122,7 @@ class User extends ActiveRecord implements IdentityInterface
     public static function findIdentity($id)
     {
         $userPermissions = Yii::$app->authManager->getPermissionsByUser($id);
-        if($userPermissions && isset($userPermissions[User::PERMISSION_USER_LOGIN])) {
+        if ($userPermissions && isset($userPermissions[User::PERMISSION_USER_LOGIN])) {
             return static::findOne(['id' => $id]);
         }
         return null;
@@ -103,7 +145,7 @@ class User extends ActiveRecord implements IdentityInterface
     public static function findByUsername($username)
     {
         $user = static::findOne(['username' => $username]);
-        if($user) {
+        if ($user) {
             $userPermissions = Yii::$app->authManager->getPermissionsByUser($user->getId());
             if ($userPermissions && isset($userPermissions[User::PERMISSION_USER_LOGIN])) {
                 return $user;
@@ -128,7 +170,7 @@ class User extends ActiveRecord implements IdentityInterface
             'password_reset_token' => $token,
         ]);
         $userPermissions = Yii::$app->authManager->getRolesByUser($user->id);
-        if($userPermissions && isset($userPermissions[User::ROLE_USER])) {
+        if ($userPermissions && isset($userPermissions[User::ROLE_USER])) {
             return $user;
         }
 
@@ -147,7 +189,7 @@ class User extends ActiveRecord implements IdentityInterface
             return false;
         }
 
-        $timestamp = (int) substr($token, strrpos($token, '_') + 1);
+        $timestamp = (int)substr($token, strrpos($token, '_') + 1);
         $expire = Yii::$app->params['user.passwordResetTokenExpire'];
         return $timestamp + $expire >= time();
     }
@@ -221,9 +263,10 @@ class User extends ActiveRecord implements IdentityInterface
         $this->password_reset_token = null;
     }
 
-    public static  function createSuperAdmin() {
+    public static function createSuperAdmin()
+    {
 
-        if(!self::findByUsername(Yii::$app->params['admin.Username'])) {
+        if (!self::findByUsername(Yii::$app->params['admin.Username'])) {
             $user = new User();
             $user->password_reset_token = '';
             $user->username = Yii::$app->params['admin.Username'];
@@ -240,9 +283,10 @@ class User extends ActiveRecord implements IdentityInterface
         }
     }
 
-    public static function getRolesList() {
+    public static function getRolesList()
+    {
         $roles = [];
-        foreach(Yii::$app->authManager->getRoles() as $role) {
+        foreach (Yii::$app->authManager->getRoles() as $role) {
             $roles[$role->name] = $role->description;
         }
         return $roles;
@@ -251,8 +295,8 @@ class User extends ActiveRecord implements IdentityInterface
     public function beforeSave($insert)
     {
         if (parent::beforeSave($insert)) {
-            if($this->isNewRecord) {
-               //...
+            if ($this->isNewRecord) {
+                //...
             }
             return true;
         } else {
@@ -260,23 +304,24 @@ class User extends ActiveRecord implements IdentityInterface
         }
     }
 
-    public static function changeRole($role_name, $user_id) {
+    public static function changeRole($role_name, $user_id)
+    {
         $auth = Yii::$app->getAuthManager();
         $role = $auth->getRole($role_name);
 
         $activeRole = current($auth->getRolesByUser($user_id));
-        if($activeRole->name == $role_name) {
+        if ($activeRole->name == $role_name) {
             return true;
         }
 
         // if super user id = 1
         // role not change
-        if($user_id == 1) {
+        if ($user_id == 1) {
             Yii::$app->getSession()->setFlash('warning', Yii::t('users', 'Can not change user role for super admin'));
             return false;
         }
 
-        if($role) {
+        if ($role) {
             $model = new User();
             $transaction = $model->getDb()->beginTransaction();
 
@@ -286,5 +331,48 @@ class User extends ActiveRecord implements IdentityInterface
             $transaction->commit();
         }
         return true;
+    }
+
+    public function upload()
+    {
+        $this->setScenario('upload');
+        if ($this->validate()) {
+            $patch = Yii::getAlias('@uploads/' . $this->dirName);
+            if (!is_dir($patch)) {
+                mkdir($patch);
+            }
+
+            $fileName = 'u_' . Yii::$app->security->generateRandomString(8) . '.' . $this->photoFile->extension;
+            if ($this->photoFile->saveAs($patch . '/' . $fileName)) {
+                $this->removeImage();
+            }
+            $this->photo = $fileName;
+            return true;
+        }
+        return false;
+    }
+
+    public function removeImage() {
+        if($this->photo) {
+            $file = Yii::getAlias('@uploads/' . $this->dirName) . '/' . $this->photo;
+            if (file_exists($file)) {
+                unlink($file);
+                ThumbHelper::removeThumbs($this->getAvatar());
+            }
+        }
+    }
+
+    public function getAvatar() {
+        return ($this->photo) ?
+                Yii::getAlias('@uploads/' . $this->dirName . '/' . $this->photo) :
+                Yii::getAlias('@uploads/no-avatar.png');
+    }
+
+    public function getTitle() {
+        if($this->first_name && $this->last_name) {
+            return $this->first_name . ' ' . $this->last_name;
+        } else {
+            return $this->username;
+        }
     }
 }

@@ -7,6 +7,7 @@ use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use yii\web\NotFoundHttpException;
+use yii\web\UploadedFile;
 
 use common\modules\users\models\User;
 use common\modules\users\models\UserProfile;
@@ -62,7 +63,7 @@ class DefaultController extends Controller
 
     public function actionLogin()
     {
-        $this->layout = 'login';
+        $this->layout = 'main-login';
         if (!\Yii::$app->user->isGuest) {
             return $this->goHome();
         }
@@ -125,6 +126,14 @@ class DefaultController extends Controller
             $model->setPassword($model->password);
             $model->generateAuthKey();
 
+            $model->photoFile = UploadedFile::getInstance($model, 'photoFile');
+            if ($model->photoFile && !$model->upload()) {
+                Yii::$app->session->setFlash('error', Yii::t('app', 'Image not upload'));
+                return $this->render('create', [
+                    'model' => $model,
+                ]);
+            }
+
             if($model->save()) {
 
                 // change role
@@ -164,7 +173,16 @@ class DefaultController extends Controller
                 $model->generateAuthKey();
             }
 
-            if($model->save()) {
+            $model->photoFile = UploadedFile::getInstance($model, 'photoFile');
+            if ($model->photoFile && !$model->upload()) {
+                Yii::$app->session->setFlash('error', Yii::t('app', 'Image not upload'));
+                return $this->render('update', [
+                    'model' => $model,
+                ]);
+            }
+
+            $model->setScenario('default');
+            if($model->save(false)) {
                 User::changeRole($model->role, $model->getId());
             }
             return $this->redirect(['view', 'id' => $model->id]);

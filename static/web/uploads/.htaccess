@@ -5,5 +5,5 @@
     # If file exists, use it directly
     # Otherwise forward it to no_image
     RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteRule . /frontend/web/themes/basic/img/no-image.jpg
+    RewriteRule . no-image.jpg
 </IfModule>

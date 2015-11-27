@@ -7,13 +7,13 @@ use \common\modules\users\models\User;
 /* @var $this yii\web\View */
 /* @var $model common\modules\users\models\User */
 
-$this->title = $model->username;
+$this->title = 'User ' . $model->username;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('users', 'Users'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="user-view">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+    <!--<h1><?/*= Html::encode($this->title) */?></h1>-->
 
     <p>
         <?= Html::a(Yii::t('users', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
