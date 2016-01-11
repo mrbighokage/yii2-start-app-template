@@ -47,6 +47,7 @@ return [
         'user' => [
             'identityClass' => 'common\modules\users\models\User',
             'enableAutoLogin' => false,
+            'authTimeout' => 60 * 60 * 1, // logout after 1h
             'loginUrl' => ['users/default/login'],
         ],
         'log' => [
