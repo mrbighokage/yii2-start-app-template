@@ -35,12 +35,7 @@ class ThumbHelper
         }
 
         $thumbPath = self::generateThumbnail($file, $width, $height, $options);
-
-        preg_match('#[^\\' . DIRECTORY_SEPARATOR . ']+$#', $thumbPath, $matches);
-        $fileName = $matches[0];
-        $fileName = substr($fileName, strpos($fileName, 'uploads') - 1);
-
-        return $fileName;
+        return substr($thumbPath, strpos($thumbPath, 'uploads') - 1);
     }
 
     public static function getFile($file, $width, $height, $options = [])
