@@ -24,4 +24,9 @@ AddDefaultCharset utf8
   RewriteRule ^uploads/?(.*)?$ /static/web/uploads/$1 [L]
   RewriteRule ^admin/?(.*)?$ /backend/web/$1 [L]
   RewriteRule ^([^/].*)?$ /frontend/web/$1 [L]
+
+  # simple subdomains
+  #RewriteCond %{HTTP_HOST} !^emitents.com [NC]
+  #RewriteCond %{HTTP_HOST} ^(www.)?([^.]+).emitents.com [NC]
+  #RewriteRule ^$ site_page.php?name=%2 [L]
 </IfModule>
