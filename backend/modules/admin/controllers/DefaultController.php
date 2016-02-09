@@ -1,12 +1,16 @@
 <?php
 namespace backend\modules\admin\controllers;
 
+use Imagine\Image\Box;
+use Imagine\Image\ManipulatorInterface;
 use Yii;
 use yii\filters\AccessControl;
+use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
-use \yii\web\Cookie;
-use \yii\web\Response;
+use yii\web\Cookie;
+use yii\web\Response;
+use yii\imagine\Image;
 
 use common\modules\users\models\User;
 
@@ -57,6 +61,33 @@ class DefaultController extends Controller
 
     public function actionIndex()
     {
+        /*$file = Yii::getAlias('@uploads/black-wallpaper.jpg');
+
+        Image::$driver = Yii::$app->params['imageDriver'];
+        $imagine = Image::getImagine();
+        print_r($imagine);
+        $image = $imagine->open($file);
+        $size = $image->getSize();
+        $scale = null;
+        $box = null;
+        if($size->getWidth() > 1280 && $size->getHeight() < 1280) {
+            $scale = round(1280*$size->getHeight()/$size->getWidth());
+            $box = new Box(1280, $scale);
+        } elseif($size->getWidth() < 1280 && $size->getHeight() > 1280) {
+            $scale = round(1280*$size->getWidth()/$size->getHeight());
+            $box = new Box($scale, 1280);
+        } else {
+            $scale = round(1280*$size->getHeight()/$size->getWidth());
+            $box = new Box(1280, $scale);
+        }
+        if($box) {
+            $mode = ArrayHelper::getValue([], 'mode', ManipulatorInterface::THUMBNAIL_OUTBOUND);
+            $image = $image->thumbnail($box, $mode);
+
+            $thumbPath = Yii::getAlias('@uploads/black-wallpaper.jpg');
+            $image->save($thumbPath);
+        }*/
+
         return $this->render('index');
     }
 
