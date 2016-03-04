@@ -38,8 +38,21 @@ return [
         'errorHandler' => [
             'errorAction' => 'site/default/error'
         ],
-        'view' => [
+        /*'view' => [
             'theme' => 'frontend\themes\basic\Theme'
+        ],*/
+        'view' => [
+            'theme' => [
+                'pathMap' => [
+                    '@app/views' => [
+                        '@app/views',
+                        '@app/modules/site/views'
+                    ],
+                    '@app/modules/users/views' => [
+                        '@app/views',
+                    ],
+                ],
+            ],
         ],
         'request' => [
             'baseUrl' => '/',
